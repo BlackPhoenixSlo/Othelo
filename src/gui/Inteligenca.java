@@ -1,9 +1,11 @@
-package inteligenca;
+package gui;
 
 import java.util.ArrayList;
-import splosno.*;
-import logika.*;
-import logika.Igra.Stanje;
+
+import logika.Igra;
+import splosno.KdoIgra;
+import splosno.Poteza;
+
 
 class Inteligenca extends KdoIgra {
     public static void main(String[] args) {
@@ -21,9 +23,9 @@ class Inteligenca extends KdoIgra {
                     igra1.igralecNaPotezi = igra1.igralecNaPotezi == 1 ? 2 : 1;
                 }
                 long startTime = System.nanoTime();
-                Poteza p;
+                Koordinati p;
                 if(igra1.igralecNaPotezi == 1){
-                    ArrayList<Poteza> moznePoteze = igra1.getValidMoves();
+                    ArrayList<Koordinati> moznePoteze = igra1.getValidMoves();
                     p = moznePoteze.get((int)(moznePoteze.size() * Math.random()));
                 }else{
                     p = izberiPotezo(igra1, 6, -500, 500, igra1.naPotezi()).poteza;
@@ -38,7 +40,7 @@ class Inteligenca extends KdoIgra {
                     }
                 }
                 igra1.odigraj(p);
-                //printBoard(igra1.getBoard());
+                printBoard(igra1.getBoard());
             }
 
             if(igra1.stanje() == Igra.Stanje.ZMAGA_1){
@@ -77,11 +79,11 @@ class Inteligenca extends KdoIgra {
         int DRAW = 0;
 
         int ocenap;
-        Poteza kandidat = null;
+        Koordinati kandidat = null;
         // Če igra player, maksimiziramo oceno z začetno oceno LOSS
         // Če ne igra player, minimiziramo oceno z začetno oceno WIN
         if (igra.naPotezi() == player) {ocena = LOSS;} else {ocena = WIN;}
-        ArrayList<Poteza> moznePoteze = igra.getValidMoves();
+        ArrayList<Koordinati> moznePoteze = igra.getValidMoves();
         if (moznePoteze.size() == 0) {
             /*kopijaIgre.odigraj(); //funkcija, ki samo zamenja igralca na potezi
             ocenap = izberiPotezo(kopijaIgre, globina-1, alpha, beta, player).ocena;*/
@@ -89,7 +91,7 @@ class Inteligenca extends KdoIgra {
         }
 
         kandidat = moznePoteze.get(0);
-        for (Poteza p : moznePoteze) {
+        for (Koordinati p : moznePoteze) {
             Igra kopijaIgre = new Igra(igra);
             kopijaIgre.odigraj (p);
             switch (kopijaIgre.stanje()) {
@@ -126,8 +128,8 @@ class Inteligenca extends KdoIgra {
         return new OcenjenaPoteza (kandidat, ocena);
     }
 
-    public static Poteza izberiPotezo(Igra igra) {
-        return izberiPotezo(igra, 8, -100, 100, igra.naPotezi()).poteza;
+    public static Koordinati izberiPotezo(Igra igra) {
+        return izberiPotezo(igra, 8, -20, 20, igra.naPotezi()).poteza;
     }
 
     public static void printBoard(int[][] board) {
@@ -142,9 +144,9 @@ class Inteligenca extends KdoIgra {
 }
 
 class OcenjenaPoteza {
-    Poteza poteza;
+    Koordinati poteza;
     int ocena;
-    public OcenjenaPoteza (Poteza poteza, int ocena) {
+    public OcenjenaPoteza (Koordinati poteza, int ocena) {
     this.poteza = poteza;
     this.ocena = ocena;
     }

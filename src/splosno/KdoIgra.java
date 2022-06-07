@@ -1,8 +1,9 @@
 package splosno;
 
+
+
 public class KdoIgra {
 	
-	// ime igralca
 	private String ime;
 	
 	public KdoIgra(String ime) {

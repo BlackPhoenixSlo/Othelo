@@ -1,16 +1,25 @@
 package logika;
 
+
 import java.util.ArrayList;
 
+import gui.Polje;
+import gui.Stanje;
+import gui.Koordinati;
 import splosno.Poteza;
 
-public class Igra {
 
+public class Igra {
+	
+	
+	//Velikost polja
+  	public static int N = 8;
+  	
     public enum Stanje {
         V_TEKU, ZMAGA_1, ZMAGA_2, NEODLOCENO;
     }
 
-    int[][] board;
+    public int[][] board = new int[8][8];
   
     int[] rowDir = new int[] { -1, -1, -1, 0, 0, 1, 1, 1 };
     int[] colDir = new int[] { -1, 0, 1, -1, 1, -1, 0, 1 };
@@ -27,7 +36,8 @@ public class Igra {
     }
 
     public Igra(Igra igra) {
-        this.board = new int[8][8];
+        
+      
         for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
         this.board[i][j] = igra.board[i][j];
@@ -41,14 +51,14 @@ public class Igra {
       return board;
     }
 
-    void flipMove(Poteza move){
-        int row = move.getY();
-        int col = move.getX();
+    public void flipMove(Koordinati p){
+        int row = p.getY();
+        int col = p.getX();
         // check all 8 directions
         for (int i = 0; i < 8; i++) {
             int newRow = row + rowDir[i];
             int newCol = col + colDir[i];
-            int opponent = this.board[row][col] == 1 ? 2 : 1;
+            int opponent = board[row][col] == 1 ? 2 : 1;
             int count = 0;
             while (newRow >= 0 && newRow <= 7 && newCol >= 0 && newCol <= 7 && board[newRow][newCol] == opponent) {
                 newRow += rowDir[i];
@@ -70,9 +80,9 @@ public class Igra {
     }
   
     // Returns if the move is valid for black
-    boolean validMove(Poteza move, int player) {
-      int row = move.getY();
-      int col = move.getX();
+    boolean validMove(Koordinati p, int player) {
+      int row = p.getY();
+      int col = p.getX();
   
       // if move in range
       if (row < 0 || row > 7 || col < 0 || col > 7) {
@@ -101,16 +111,16 @@ public class Igra {
       return false;
     }
 
-    boolean validMove(Poteza p) {
+    public boolean validMove(Koordinati p) {
         int player = this.naPotezi();
         return validMove(p, player);
     }
 
-    public ArrayList<Poteza> getValidMoves(int player) {
-        ArrayList<Poteza> validMoves = new ArrayList<Poteza>();
+    public ArrayList<Koordinati> getValidMoves(int player) {
+        ArrayList<Koordinati> validMoves = new ArrayList<Koordinati>();
         for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
-            Poteza move = new Poteza(i, j);
+        	  Koordinati move = new Koordinati(i, j);
             if (validMove(move, player)) {
               validMoves.add(move);
             }
@@ -119,15 +129,15 @@ public class Igra {
         return validMoves;
     }
 
-    public ArrayList<Poteza> getValidMoves() {
+    public ArrayList<Koordinati> getValidMoves() {
         return getValidMoves(this.naPotezi());
     }
 
-    public void odigraj(Poteza p) {
+    public void odigraj(Koordinati p) {
         if (p != null && this.validMove(p)) {
             int x = p.getX();
             int y = p.getY();
-            this.board[y][x] = this.naPotezi();
+            board[y][x] = this.naPotezi();
             this.flipMove(p);
         }
         if (this.naPotezi() == 1) {
@@ -146,6 +156,8 @@ public class Igra {
             this.igralecNaPotezi = 1;
         }
     }
+    
+    
 
     public int naPotezi() {
         return this.igralecNaPotezi;
@@ -157,10 +169,10 @@ public class Igra {
         int st_2 = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (this.board[i][j] == 1) {
+                if (board[i][j] == 1) {
                     st_1 += 1;
                 }
-                if (this.board[i][j] == 2) {
+                if (board[i][j] == 2) {
                     st_2 += 1;
                 }
             }
